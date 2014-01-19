@@ -24,10 +24,13 @@ import devices
 import diode, ekv, mosq, switch
 import printing
 
+from warnings import warn
+from exceptions import DeprecationWarning
+
 # will be added here by netlist_parser and circuit instances
 user_defined_modules_dict = {}
 
-class circuit:
+class Circuit(object):
 	"""Every circuit is described in the ahkab simulator by a circuit class.
 	This class holds everything is needed to simulate the circuit (except
 	the specification of the analyses to be performed).
@@ -47,7 +50,7 @@ class circuit:
 	identifier (or external node name) is printed instead.
 
 	This is done through:
-		my_circuit = circuit()
+		my_circuit = Circuit()
 
  		...
 		[ init code ]
@@ -74,7 +77,7 @@ class circuit:
 
 	Example:
 
-	mycircuit = circuit.circuit(title="Example circuit", filename=None)
+	mycircuit = circuit.Circuit(title="Example circuit", filename=None)
 	# no filename since there will be no deck associated with this circuit.
 	# get the ref node (gnd)
 	gnd = mycircuit.get_ground_node()
@@ -782,6 +785,14 @@ class circuit:
 		else:
 			ret = None
 		return ret
+
+
+class circuit(Circuit):
+    """Old class name, just intantiate Circuit and warn about the name change"""
+
+    def __init__(self, *args, **kwargs):
+        super(circuit, self).__init__(*args, **kwargs)
+        warn("The lower case name 'circuit' is deprecated, you should use 'Circuit' instead", category=DeprecationWarning)
 
 
 # STATIC METHODS
